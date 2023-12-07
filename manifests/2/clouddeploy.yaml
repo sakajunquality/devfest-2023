@@ -1,0 +1,41 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+ name: test-app
+description: test-app application pipeline
+serialPipeline:
+  stages:
+  - targetId: stg-test-app
+    profiles: [stg]
+  - targetId: prd-test-app
+    profiles: [prd]
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: prd-test-app
+description: Cloud Run production
+run:
+ location: projects/sakajun-devfest23/locations/asia-northeast1
+executionConfigs:
+- defaultPool:
+    serviceAccount: deployer@sakajun-devfest23.iam.gserviceaccount.com
+  usages:
+  - DEPLOY
+  - RENDER
+  - VERIFY
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: stg-test-app
+description: Cloud Run production
+run:
+ location: projects/sakajun-devfest23/locations/asia-northeast1
+executionConfigs:
+- defaultPool:
+    serviceAccount: deployer@sakajun-devfest23.iam.gserviceaccount.com
+  usages:
+  - DEPLOY
+  - RENDER
+  - VERIFY

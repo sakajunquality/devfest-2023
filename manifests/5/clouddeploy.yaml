@@ -1,0 +1,84 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+ name: test-app
+description: test-app application pipeline
+serialPipeline:
+  stages:
+  - targetId: stg-test-app
+    profiles: [stg]
+  - targetId: prd-test-app
+    profiles: [prd]
+    strategy:
+      canary:
+        runtimeConfig:
+          cloudRun:
+            automaticTrafficControl: true
+        canaryDeployment:
+          percentages: [25, 50, 75]
+          verify: true
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: prd-test-app
+description: Cloud Run production
+run:
+ location: projects/sakajun-devfest23/locations/asia-northeast1
+executionConfigs:
+- defaultPool:
+    serviceAccount: deployer@sakajun-devfest23.iam.gserviceaccount.com
+  usages:
+  - DEPLOY
+  - RENDER
+  - VERIFY
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: stg-test-app
+description: Cloud Run production
+run:
+ location: projects/sakajun-devfest23/locations/asia-northeast1
+executionConfigs:
+- defaultPool:
+    serviceAccount: deployer@sakajun-devfest23.iam.gserviceaccount.com
+  usages:
+  - DEPLOY
+  - RENDER
+  - VERIFY
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Automation
+metadata:
+  name: test-app/promote
+description: Promotes a release to the next target
+suspended: false
+serviceAccount: automation@sakajun-devfest23.iam.gserviceaccount.com
+selector:
+- target:
+    id: "*"
+rules:
+- promoteRelease:
+    name: "promote-release"
+    toTargetId: "@next"
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Automation
+metadata:
+  name: test-app/advance
+description: advances a rollout
+suspended: false
+serviceAccount: automation@sakajun-devfest23.iam.gserviceaccount.com
+selector:
+- target:
+    id: "*"
+rules:
+- advanceRollout:
+    name: "advance-rollout-to-50"
+    sourcePhases: ["canary-25"]
+    wait: 1m
+- advanceRollout:
+    name: "advance-rollout-to-75"
+    sourcePhases: ["canary-50"]
+    wait: 10m

@@ -1,0 +1,11 @@
+apiVersion: skaffold/v3alpha1
+kind: Config
+metadata: 
+  name: test-app
+profiles:
+- name: prd
+  manifests:
+    rawYaml:
+    - service-prd.yaml
+deploy:
+  cloudrun: {}
