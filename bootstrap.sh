@@ -1,4 +1,10 @@
-export PROJECT_ID=sakajun-devfest23
+#!/bin/bash
+
+if [ -z "$PROJECT_ID" ]; then
+    echo "export PROJECT_ID as environment variable."
+    exit 1
+fi
+
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
 
 gcloud services enable compute.googleapis.com \

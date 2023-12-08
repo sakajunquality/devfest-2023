@@ -17,10 +17,10 @@ metadata:
 description: Cloud Run production
 requireApproval: true
 run:
- location: projects/sakajun-devfest23/locations/asia-northeast1
+ location: projects/FIX_ME_PROJECT_ID/locations/asia-northeast1
 executionConfigs:
 - defaultPool:
-    serviceAccount: deployer@sakajun-devfest23.iam.gserviceaccount.com
+    serviceAccount: deployer@FIX_ME_PROJECT_ID.iam.gserviceaccount.com
   usages:
   - DEPLOY
   - RENDER
@@ -32,10 +32,10 @@ metadata:
  name: stg-test-app
 description: Cloud Run production
 run:
- location: projects/sakajun-devfest23/locations/asia-northeast1
+ location: projects/FIX_ME_PROJECT_ID/locations/asia-northeast1
 executionConfigs:
 - defaultPool:
-    serviceAccount: deployer@sakajun-devfest23.iam.gserviceaccount.com
+    serviceAccount: deployer@FIX_ME_PROJECT_ID.iam.gserviceaccount.com
   usages:
   - DEPLOY
   - RENDER
@@ -47,7 +47,7 @@ metadata:
   name: test-app/promote
 description: Promotes a release to the next target
 suspended: false
-serviceAccount: automation@sakajun-devfest23.iam.gserviceaccount.com
+serviceAccount: automation@FIX_ME_PROJECT_ID.iam.gserviceaccount.com
 selector:
 - target:
     id: "*"
